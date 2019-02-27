@@ -14,6 +14,7 @@ class AppContent extends Component {
                 <DynamicForm
                     registerUser={this.props.registerUser}
                     loginUser={this.props.loginUser}
+                    createGame ={this.props.createGame}
                     loginForm={this.props.loginForm}
                     regForm={this.props.regForm}
                     user={this.props.user}
