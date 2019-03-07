@@ -11,7 +11,9 @@ class App extends Component {
         <Router>
           <Fragment>
             <header>
-              <nav class="navbar-menu"><a href="/">Book Store</a><a href="/" class="active" aria-current="page">Home</a>
+              <nav class="navbar-menu">
+              
+              <a href="/" class="active" aria-current="page">Home</a>
               <a href="/computers">Computers</a>
                 <a href="/orders">My Orders</a>
                 <a href="/cart">Cart</a>
