@@ -12,7 +12,6 @@ class App extends Component {
           <Fragment>
             <header>
               <nav class="navbar-menu">
-              
               <a href="/" class="active" aria-current="page">Home</a>
               <a href="/computers">Computers</a>
                 <a href="/orders">My Orders</a>

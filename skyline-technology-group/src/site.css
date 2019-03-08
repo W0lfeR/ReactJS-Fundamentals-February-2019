@@ -13,8 +13,8 @@ body {
 }
 
 a {
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 15px;
+	display: inline-block;
 }
 
 img {
@@ -26,24 +26,23 @@ img {
 nav.navbar-menu {    
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
     align-items: center;
     background-color: rgb(0,0,0);
 }
 
 nav.navbar-menu a {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     text-decoration: none;
     color: white;    
-    width: 15%;
+    width: 7%;
     align-items: center;
-    padding: 20px 10px;
-    border: 1px solid rgb(88, 182, 92);
+    padding: 19px 10px;
+
 }
 
 nav.navbar-menu a:hover {
-    color: rgb(88, 182, 92);
+    color: rgb(128,128,128);
     background-color: white;
 }
 
@@ -148,7 +147,7 @@ footer {
     width: 100%;
     bottom: 0;
     text-align: center;
-    background-color: rgb(88, 182, 92);
+    background-color: rgb(0,0,0);
     padding: 10px 0;
     font-size: 18px;
     font-weight: bold;
