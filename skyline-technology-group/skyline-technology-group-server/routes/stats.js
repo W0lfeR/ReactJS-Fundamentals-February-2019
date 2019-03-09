@@ -1,5 +1,5 @@
 const express = require('express')
-const Book = require('../models/Computer')
+const Computer = require('../models/Computer')
 const User = require('../models/User')
 
 const router = new express.Router()
