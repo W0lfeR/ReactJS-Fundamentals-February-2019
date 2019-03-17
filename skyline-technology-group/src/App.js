@@ -1,36 +1,109 @@
-import React, { Component, Fragment } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import Home from './views/home'
-import NotFound from './views/not-found'
-
+import React, { Component } from 'react'
+import Navbar from './components/common/Navbar'
+import Footer from './components/common/Footer'
+import Preloader from './components/common/Preloader/Preloader'
+import HomePage from './components/home/HomePage'
+import RegisterPage from './components/auth/RegisterPage'
+import LoginPage from './components/auth/LoginPage'
+import CreatePage from './components/create/CreatePage'
+import EditPage from './components/edit/EditPage'
+import StorePage from './components/store/StorePage'
+import DetailsPage from './components/details/DetailsPage'
+import CartPage from './components/cart/CartPage'
+import OrdersPage from './components/orders/OrdersPage'
+import OrderDetailsPage from './components/orders/OrderDetailsPage'
+import NotFoundPage from './components/common/NotFound/NotFoundPage'
+import Auth from './utils/auth'
+import PrivateRoute from './components/common/Routes/PrivateRoute'
+import AdminRoute from './components/common/Routes/AdminRoute'
+import fetchStatsAction from './actions/statsActions'
+import toastr from 'toastr'
+import { Switch, Route, withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { logoutAction } from './actions/authActions'
+import { fetchProductsAction } from './actions/productsActions'
 
 class App extends Component {
-  render() {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      loggedIn: false
+    }
+
+    this.logout = this.logout.bind(this)
+  }
+
+  componentWillMount () {
+    if (Auth.isUserAuthenticated()) {
+      this.setState({ loggedIn: true })
+    }
+    this.props.fetchStats()
+    this.props.fetchProducts()
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.loginSuccess) {
+      this.setState({ loggedIn: true })
+    }
+  }
+
+  logout () {
+    this.setState({ loggedIn: false })
+    this.props.logout()
+    toastr.success('Logout successful')
+    this.props.history.push('/login')
+  }
+
+  render () {
+    const isAdmin = Auth.isUserAdmin()
+    const {productsCount, usersCount} = this.props.stats
+
     return (
-      <div>
-        <Router>
-          <Fragment>
-            <header>
-              <nav class="navbar-menu">
-              <a href="/" class="active" aria-current="page">Home</a>
-              <a href="/computers">Computers</a>
-                <a href="/orders">My Orders</a>
-                <a href="/cart">Cart</a>
-                <a href="javascript:void(0)">Logout</a>
-                </nav>
-            </header>
-            <Switch>
-              <Route path='/' exact component={Home} />
-              <Route component={NotFound} />
-            </Switch>
-            <div>
-              <footer id="footer" class="page-footer mt-4">© Skyline Technology Group</footer>
-            </div>
-          </Fragment>
-        </Router>
+      <div className='App'>
+        <Navbar
+          products={productsCount}
+          users={usersCount}
+          loggedIn={this.state.loggedIn}
+          isAdmin={isAdmin}
+          logout={this.logout} />
+        <Preloader />
+        <main>
+          <Switch>
+            <Route exact path='/' component={HomePage} />
+            <Route exact path='/store' component={StorePage} />
+            <Route exact path='/store/:page' component={StorePage} />
+            <Route path='/register' component={RegisterPage} />
+            <Route path='/login' component={LoginPage} />
+            <AdminRoute path='/admin/create' component={CreatePage} />
+            <AdminRoute path='/admin/edit/:id' component={EditPage} />
+            <AdminRoute path='/admin/orders' component={OrdersPage} />
+            <PrivateRoute path='/details/:id' component={DetailsPage} />
+            <PrivateRoute path='/cart' component={CartPage} />
+            <PrivateRoute path='/orders/details/:id' component={OrderDetailsPage} />
+            <PrivateRoute exact path='/orders' component={OrdersPage} />
+            <Route component={NotFoundPage} />
+          </Switch>
+        </main>
+        <Footer />
       </div>
-    );
+    )
   }
 }
 
-export default App;
+function mapStateToProps (state) {
+  return {
+    loginSuccess: state.login.success,
+    stats: state.stats
+  }
+}
+
+function mapDispatchToProps (dispatch) {
+  return {
+    logout: () => dispatch(logoutAction()),
+    fetchStats: () => dispatch(fetchStatsAction()),
+    fetchProducts: () => dispatch(fetchProductsAction())
+  }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))
