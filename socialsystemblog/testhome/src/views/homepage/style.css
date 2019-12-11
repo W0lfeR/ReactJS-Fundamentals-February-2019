@@ -1,0 +1,28 @@
+@media only screen and (max-width: 28px){
+    #video-background {
+        min-height: auto;
+        top: auto;
+        position: relative;
+        left: 0;
+        width: 100%;
+        -ms-transform: none;
+        -moz-transform: none;
+        -webkit-transform: none;
+        transform: none;
+    }
+    
+    #video-background {
+        position: relative;
+        top: 50%;
+        left: 50%;
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        -ms-transform: translateX(-50%) translateY(-50%);
+        -moz-transform: translateX(-50%) translateY(-50%);
+        -webkit-transform: translateX(-50%) translateY(-50%);
+        transform: translateX(-50%) translateY(-50%);
+        background-size: cover;
+    }
+    }
