@@ -1,53 +1,57 @@
-const mongoose = require('mongoose');
-const encryption = require('../util/encryption');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const encryption = require('../utilities/encryption')
 
-const userSchema = new Schema({
+const REQUIRED_VALIDATION_MESSAGE = '{PATH} is required'
+
+let userSchema = new mongoose.Schema({
   email: {
-    type: Schema.Types.String,
-    required: true
+    type: String,
+    required: REQUIRED_VALIDATION_MESSAGE,
+    unique: true
   },
-  hashedPassword: {
-    type: Schema.Types.String,
-    required: true
+  organisation: {
+    type: String,
+    required: REQUIRED_VALIDATION_MESSAGE
   },
-  username: {
-    type: Schema.Types.String,
-    required: true
+  nameOfUser: {
+    type: String
   },
-  salt: {
-    type: Schema.Types.String,
-    required: true
+  phoneNumber: {
+    type: String
   },
-  roles: [{type: Schema.Types.String, required: true}]
-});
+  salt: String,
+  password: String,
+  roles: [String]
+})
 
 userSchema.method({
   authenticate: function (password) {
-    const currentHashedPass = encryption.generateHashedPassword(this.salt, password);
-
-    return currentHashedPass === this.hashedPassword;
+    return encryption.generateHashedPassword(this.salt, password) === this.password
   }
-});
+})
 
-const User = mongoose.model('User', userSchema);
+let User = mongoose.model('User', userSchema)
 
-User.seedAdminUser = async () => {
-  try {
-    let users = await User.find();
-    if (users.length > 0) return;
-    const salt = encryption.generateSalt();
-    const hashedPassword = encryption.generateHashedPassword(salt, 'Admin');
-    return User.create({
-      username: 'Admin',
-      email: 'Admin@gmail.com',
-      salt,
-      hashedPassword,
+module.exports = User
+
+module.exports.seedAdminUser = () => {
+  User.find({}).then(users => {
+    if (users.length > 0) return
+
+    let salt = encryption.generateSalt()
+    let password = encryption.generateHashedPassword(salt, 'adminadmin')
+
+    User.create({
+      email: 'admin@admin.com',
+      name: 'admin',
+      organisation: 'admin',
+      phoneNumber: '08',
+
+      salt: salt,
+      password: password,
       roles: ['Admin']
-    });
-  } catch (e) {
-    console.log(e);
-  }
-};
+    })
+  })
+}
 
-module.exports = User;
+// DONE!
