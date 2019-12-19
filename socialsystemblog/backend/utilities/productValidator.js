@@ -3,7 +3,9 @@ module.exports = (payload) => {
     let isFormValid = true
     let message = ''
     let allowedLangs = ["en", "bg", "gr", "ro"];
-    let allowedCategories = ["chemicals", "consumables", "instruments", "glassware", "filters"]
+    let allowedCategories = [  "cars",
+  "food",
+  "politics",]
   
   
     if (!payload || typeof payload.manufacturer !== 'string' || payload.manufacturer.length < 3) {
@@ -18,7 +20,7 @@ module.exports = (payload) => {
   
     if (!payload || typeof payload.category !== 'string' || !allowedCategories.includes(payload.category)) {
       isFormValid = false
-      errors.description = 'Category must be one of the following: "chemicals", "consumables", "instruments", "glassware", "filters".'
+      errors.description = 'Category must be one of the following: "cars", "food", "politics".'
     }
   
     if (!payload || typeof payload.logoUrl !== 'string' ||
